@@ -1,8 +1,23 @@
 const notesCtrl = {};
 
-notesCtrl.getNotes = (req, res) => res.json({message: []})
+const Note = require('../models/Note');
 
-notesCtrl.createNote = (req, res) => res.json({message: 'Note Saved'})
+notesCtrl.getNotes = async (req, res) => {
+    const notes = await Note.find(); // retorna un arreglo
+    res.json(notes);
+}
+
+notesCtrl.createNote = async (req, res) => {
+    const { title, content, date, author } = req.body;
+    const newNote = new Note({
+        title: title,
+        content: content,
+        date: date,
+        author: author
+    })
+    await newNote.save();
+    res.json({message: 'Note Saved'})
+}
 
 notesCtrl.getNote = (req, res) => res.json({message: 'Note'})
 
